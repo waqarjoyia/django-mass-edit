@@ -220,7 +220,7 @@ class MassAdmin(admin.ModelAdmin):
             self.get_queryset)(request)
 
         object_ids = comma_separated_object_ids.split(',')
-        object_id = object_ids[-1]
+        object_id = object_ids[0]
 
         try:
             obj = queryset.get(pk=unquote(object_id))
