@@ -205,6 +205,8 @@ class MassAdmin(admin.ModelAdmin):
             comma_separated_object_ids,
             extra_context=None):
         """The 'mass change' admin view for this model."""
+        import pdb
+        pdb.set_trace()
         global new_object
         model = self.model
         opts = model._meta
