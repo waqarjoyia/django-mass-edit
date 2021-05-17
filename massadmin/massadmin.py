@@ -243,8 +243,6 @@ class MassAdmin(admin.ModelAdmin):
         for k, v in request.POST.items():
             if hasattr(obj, k) and is_dirty(getattr(obj, k), v):
                 dirty_fields.append(k)
-        import pdb
-        pdb.set_trace()
         # mass_changes_fields = request.POST.getlist("_mass_change")
         if request.method == 'POST':
             # commit only when all forms are valid
