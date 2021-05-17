@@ -243,7 +243,7 @@ class MassAdmin(admin.ModelAdmin):
         errors, errors_list = None, None
         dirty_fields = []
         for k, v in request.POST.items():
-            if hasattr(obj, k) and str(v) != str(getattr(obj, k)):
+            if hasattr(obj, k) and str(v) != str(getattr(obj, k) if getattr(obj, k) is not None else ''):
                 dirty_fields.append(k)
         # mass_changes_fields = request.POST.getlist("_mass_change")
         if request.method == 'POST':
