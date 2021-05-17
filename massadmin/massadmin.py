@@ -220,7 +220,7 @@ class MassAdmin(admin.ModelAdmin):
             self.get_queryset)(request)
 
         object_ids = comma_separated_object_ids.split(',')
-        object_id = object_ids[0]
+        object_id = object_ids[-1]
 
         try:
             obj = queryset.get(pk=unquote(object_id))
@@ -241,6 +241,10 @@ class MassAdmin(admin.ModelAdmin):
         ModelForm = self.get_form(request, obj)
         formsets = []
         errors, errors_list = None, None
+        dirty_fields = []
+        for k, v in request.POST.items():
+            if hasattr(obj, k) and str(v) != str(getattr(obj, k)):
+                dirty_fields.append(k)
         # mass_changes_fields = request.POST.getlist("_mass_change")
         if request.method == 'POST':
             # commit only when all forms are valid
@@ -258,7 +262,7 @@ class MassAdmin(admin.ModelAdmin):
 
                         exclude = []
                         for fieldname, field in list(form.fields.items()):
-                            if fieldname in exclude_fields:
+                            if fieldname in exclude_fields or fieldname not in dirty_fields:
                                 exclude.append(fieldname)
 
                         for exclude_fieldname in exclude:
