@@ -177,6 +177,8 @@ class MassAdmin(admin.ModelAdmin):
             'has_change_permission': self.has_change_permission(request, obj),
             'has_delete_permission': self.has_delete_permission(request, obj),
             'has_view_permission': self.has_view_permission(request, obj),
+            'has_editable_inline_admin_formsets': self.has_editable_inline_admin_formsets if
+            hasattr(self, 'has_editable_inline_admin_formsets') else False,
             'has_file_field': True,
             'has_absolute_url': hasattr(self.model, 'get_absolute_url'),
             'form_url': mark_safe(form_url),
