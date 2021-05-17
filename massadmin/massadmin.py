@@ -403,6 +403,6 @@ def is_dirty(field_1, field_2):
     elif isinstance(field_1, (str, int, bool, list, float, tuple)):
         if str(field_1) != field_2:
             return True
-    elif field_1 and hasattr(field_1, 'id') and getattr(field_1, 'id') != field_2:
+    elif field_1 and hasattr(field_1, 'id') and str(getattr(field_1, 'id')) != field_2:
         return True
     return False
