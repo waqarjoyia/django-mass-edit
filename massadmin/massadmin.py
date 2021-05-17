@@ -241,7 +241,7 @@ class MassAdmin(admin.ModelAdmin):
         ModelForm = self.get_form(request, obj)
         formsets = []
         errors, errors_list = None, None
-        mass_changes_fields = request.POST.getlist("_mass_change")
+        # mass_changes_fields = request.POST.getlist("_mass_change")
         if request.method == 'POST':
             # commit only when all forms are valid
             try:
@@ -258,7 +258,7 @@ class MassAdmin(admin.ModelAdmin):
 
                         exclude = []
                         for fieldname, field in list(form.fields.items()):
-                            if fieldname not in mass_changes_fields:
+                            if fieldname in exclude_fields:
                                 exclude.append(fieldname)
 
                         for exclude_fieldname in exclude:
@@ -279,13 +279,13 @@ class MassAdmin(admin.ModelAdmin):
                             prefixes[prefix] = prefixes.get(prefix, 0) + 1
                             if prefixes[prefix] != 1:
                                 prefix = "%s-%s" % (prefix, prefixes[prefix])
-                            if prefix in mass_changes_fields:
-                                formset = FormSet(
-                                    request.POST,
-                                    request.FILES,
-                                    instance=new_object,
-                                    prefix=prefix)
-                                formsets.append(formset)
+                            # if prefix in mass_changes_fields:
+                            #     formset = FormSet(
+                            #         request.POST,
+                            #         request.FILES,
+                            #         instance=new_object,
+                            #         prefix=prefix)
+                            #     formsets.append(formset)
 
                         if all_valid(formsets) and form_validated:
                             # self.admin_obj.save_model(request, new_object, form, change=True)
@@ -371,12 +371,12 @@ class MassAdmin(admin.ModelAdmin):
             'exclude_fields': exclude_fields,
             'is_popup': '_popup' in request.GET or '_popup' in request.POST,
             'media': mark_safe(media),
-            #'inline_admin_formsets': inline_admin_formsets,
+            # 'inline_admin_formsets': inline_admin_formsets,
             'errors': errors_list,
             'general_error': general_error,
             'app_label': opts.app_label,
             'object_ids': comma_separated_object_ids,
-            'mass_changes_fields': mass_changes_fields,
+            # 'mass_changes_fields': mass_changes_fields,
         }
         context.update(self.admin_site.each_context(request))
         context.update(extra_context or {})
