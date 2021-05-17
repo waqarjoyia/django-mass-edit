@@ -388,7 +388,7 @@ class MassAdmin(admin.ModelAdmin):
             request,
             context,
             change=True,
-            obj=obj)
+            obj=None)
 
 
 class MassEditMixin:
