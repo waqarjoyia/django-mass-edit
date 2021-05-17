@@ -402,8 +402,8 @@ def is_dirty(field_1, field_2):
         return False
     elif isinstance(field_1, (str, int, bool, list, float, tuple)):
         if isinstance(field_1, list):
-            field_2 = [field_2]
-        if str(field_1) != field_2:
+            field_2 = field_2.split(',')
+        if str(field_1) != str(field_2):
             return True
     elif field_1 and hasattr(field_1, 'id') and str(getattr(field_1, 'id')) != field_2:
         return True
