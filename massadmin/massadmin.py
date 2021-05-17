@@ -205,8 +205,6 @@ class MassAdmin(admin.ModelAdmin):
             comma_separated_object_ids,
             extra_context=None):
         """The 'mass change' admin view for this model."""
-        import pdb
-        pdb.set_trace()
         global new_object
         model = self.model
         opts = model._meta
@@ -243,8 +241,10 @@ class MassAdmin(admin.ModelAdmin):
         errors, errors_list = None, None
         dirty_fields = []
         for k, v in request.POST.items():
-            if hasattr(obj, k) and str(v) != str(getattr(obj, k) if getattr(obj, k) is not None else ''):
+            if hasattr(obj, k) and is_dirty(getattr(obj, k), v):
                 dirty_fields.append(k)
+        import pdb
+        pdb.set_trace()
         # mass_changes_fields = request.POST.getlist("_mass_change")
         if request.method == 'POST':
             # commit only when all forms are valid
@@ -388,10 +388,21 @@ class MassAdmin(admin.ModelAdmin):
             request,
             context,
             change=True,
-            obj=None)
+            obj=obj)
 
 
 class MassEditMixin:
     actions = (
         mass_change_selected,
     )
+
+
+def is_dirty(field_1, field_2):
+    if field_1 is None and field_2 == '':
+        return False
+    elif isinstance(field_1, (str, int, bool, list, float, tuple)):
+        if str(field_1) != field_2:
+            return True
+    elif field_1 and hasattr(field_1, 'id') and getattr(field_1, 'id') != field_2:
+        return True
+    return False
