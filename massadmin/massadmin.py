@@ -247,7 +247,7 @@ class MassAdmin(admin.ModelAdmin):
         if hasattr(self.admin_obj, 'massadmin_boolean_fields'):
             for boolean_field in self.admin_obj.massadmin_boolean_fields:
                 if not post_data.get(boolean_field):
-                    post_data[boolean_field] = 'off'
+                    post_data[boolean_field] = False
                     dirty_fields.append(boolean_field)
         # mass_changes_fields = post_data.getlist("_mass_change")
         if request.method == 'POST':
