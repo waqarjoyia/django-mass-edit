@@ -241,6 +241,9 @@ class MassAdmin(admin.ModelAdmin):
         errors, errors_list = None, None
         dirty_fields = []
         for k, v in request.POST.items():
+            if k == 'is_customer_approval_required':
+                import pdb
+                pdb.set_trace()
             if hasattr(obj, k) and is_dirty(getattr(obj, k), v):
                 dirty_fields.append(k)
         # mass_changes_fields = request.POST.getlist("_mass_change")
