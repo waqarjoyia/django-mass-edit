@@ -240,6 +240,8 @@ class MassAdmin(admin.ModelAdmin):
         formsets = []
         errors, errors_list = None, None
         dirty_fields = []
+        import pdb
+        pdb.set_trace()
         for k, v in request.POST.items():
             if k == 'is_customer_approval_required':
                 import pdb
