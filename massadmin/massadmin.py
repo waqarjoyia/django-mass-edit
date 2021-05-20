@@ -269,8 +269,6 @@ class MassAdmin(admin.ModelAdmin):
                             if fieldname in exclude_fields or fieldname not in dirty_fields:
                                 exclude.append(fieldname)
 
-                        form.fields.extend(boolean_dirty_fields)
-
                         for exclude_fieldname in exclude:
                             del form.fields[exclude_fieldname]
 
