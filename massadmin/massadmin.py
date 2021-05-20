@@ -396,6 +396,8 @@ class MassEditMixin:
 
 
 def is_dirty(field_1, field_2):
+    import pdb
+    pdb.set_trace()
     if field_1 is None and field_2 == '':
         return False
     elif isinstance(field_1, (str, int, bool, list, float, tuple)):
