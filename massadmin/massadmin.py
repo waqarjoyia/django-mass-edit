@@ -240,15 +240,16 @@ class MassAdmin(admin.ModelAdmin):
         formsets = []
         errors, errors_list = None, None
         dirty_fields = []
-        import pdb
-        pdb.set_trace()
-        for k, v in request.POST.items():
-            if k == 'is_customer_approval_required':
-                import pdb
-                pdb.set_trace()
+        post_data = request.POST.copy()
+        for k, v in post_data.items():
             if hasattr(obj, k) and is_dirty(getattr(obj, k), v):
                 dirty_fields.append(k)
-        # mass_changes_fields = request.POST.getlist("_mass_change")
+        if hasattr(self.admin_obj, 'massadmin_boolean_fields'):
+            for boolean_field in self.admin_obj.massadmin_boolean_fields:
+                if not post_data.get(boolean_field):
+                    post_data[boolean_field] = 'off'
+                    dirty_fields.append(boolean_field)
+        # mass_changes_fields = post_data.getlist("_mass_change")
         if request.method == 'POST':
             # commit only when all forms are valid
             try:
@@ -259,7 +260,7 @@ class MassAdmin(admin.ModelAdmin):
                     for obj in objects:
                         objects_count += 1
                         form = ModelForm(
-                            request.POST,
+                            post_data,
                             request.FILES,
                             instance=obj)
 
@@ -267,6 +268,8 @@ class MassAdmin(admin.ModelAdmin):
                         for fieldname, field in list(form.fields.items()):
                             if fieldname in exclude_fields or fieldname not in dirty_fields:
                                 exclude.append(fieldname)
+
+                        form.fields.extend(boolean_dirty_fields)
 
                         for exclude_fieldname in exclude:
                             del form.fields[exclude_fieldname]
@@ -288,7 +291,7 @@ class MassAdmin(admin.ModelAdmin):
                                 prefix = "%s-%s" % (prefix, prefixes[prefix])
                             # if prefix in mass_changes_fields:
                             #     formset = FormSet(
-                            #         request.POST,
+                            #         post_data,
                             #         request.FILES,
                             #         instance=new_object,
                             #         prefix=prefix)
@@ -376,7 +379,7 @@ class MassAdmin(admin.ModelAdmin):
             'original': obj,
             'unique_fields': unique_fields,
             'exclude_fields': exclude_fields,
-            'is_popup': '_popup' in request.GET or '_popup' in request.POST,
+            'is_popup': '_popup' in request.GET or '_popup' in post_data,
             'media': mark_safe(media),
             # 'inline_admin_formsets': inline_admin_formsets,
             'errors': errors_list,
