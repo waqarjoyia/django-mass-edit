@@ -411,4 +411,6 @@ def is_dirty(field_1, field_2):
             return True
     elif field_1 and hasattr(field_1, 'id') and str(getattr(field_1, 'id')) != field_2:
         return True
+    elif not field_1 and field_2:
+        return True
     return False
